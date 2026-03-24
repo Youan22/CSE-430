@@ -21,6 +21,24 @@
         <li><a href="#" (click)="onSelected('messages')">Messages</a></li>
         <li><a href="#" (click)="onSelected('contacts')">Contacts</a></li>
       </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown" appDropdown>
+          <a
+            href="#"
+            class="dropdown-toggle"
+            role="button"
+            (click)="$event.preventDefault()"
+          >
+            User <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#" (click)="$event.preventDefault()">Login</a></li>
+            <li><a href="#" (click)="$event.preventDefault()">Other</a></li>
+            <li class="divider"></li>
+            <li><a href="#" (click)="$event.preventDefault()">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>
