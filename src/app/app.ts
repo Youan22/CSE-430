@@ -1,15 +1,22 @@
-import { Component, signal } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { Contacts } from './contacts/contacts';
+import { Documents } from './documents/documents';
 import { Header } from './header';
+import { MessageList } from './messages/message-list/message-list';
 
 @Component({
   selector: 'cms-root',
-  imports: [RouterOutlet, Header, Contacts],
+  imports: [NgIf, RouterOutlet, Header, Documents, MessageList, Contacts],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('cms');
+  selectedFeature = 'documents';
+
+  switchView(selectedFeature: string): void {
+    this.selectedFeature = selectedFeature;
+  }
 }

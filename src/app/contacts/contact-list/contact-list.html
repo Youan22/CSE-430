@@ -4,13 +4,10 @@
     <a href="#" class="btn btn-success pull-right">New Contact</a>
   </div>
   <div class="panel-body">
-    <div *ngFor="let contact of contacts" class="contact-row clearfix">
-      <span class="contact-name pull-left">{{ contact.name }}</span>
-      <img
-        class="contact-photo pull-right img-responsive"
-        src="{{ contact.imageUrl }}"
-        alt="{{ contact.name }}"
-      />
-    </div>
+    <cms-contact-item
+      *ngFor="let contact of contacts"
+      [contact]="contact"
+      (click)="onSelected(contact)"
+    />
   </div>
 </div>

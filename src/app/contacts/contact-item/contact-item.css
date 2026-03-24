@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  cursor: pointer;
+}
+
+.contact-row {
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.contact-name {
+  margin-top: 8px;
+}
+
+.contact-photo {
+  max-height: 56px;
+  width: auto;
+}
+
+:host(:last-child) .contact-row {
+  border-bottom: none;
+}

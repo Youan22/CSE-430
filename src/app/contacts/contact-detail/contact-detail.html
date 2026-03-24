@@ -1,8 +1,12 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title contact-name">&nbsp;</h3>
+    <h3 class="panel-title contact-name">{{ contact.name }}</h3>
     <div class="clearfix contact-heading-row">
-      <div class="pull-left contact-photo-placeholder" aria-hidden="true"></div>
+      <img
+        class="pull-left img-responsive contact-photo"
+        src="{{ contact.imageUrl }}"
+        alt="{{ contact.name }}"
+      />
       <div class="pull-right btn-group contact-actions" role="group">
         <a href="#" class="btn btn-primary">Edit</a>
         <a href="#" class="btn btn-danger">Delete</a>
@@ -10,7 +14,7 @@
     </div>
   </div>
   <div class="panel-body">
-    <p><strong>Email:</strong></p>
-    <p><strong>Phone:</strong></p>
+    <p><strong>Email:</strong> {{ contact.email }}</p>
+    <p><strong>Phone:</strong> {{ contact.phone }}</p>
   </div>
 </div>

@@ -8,9 +8,9 @@
   margin-top: 2px;
 }
 
-.contact-photo-placeholder {
-  width: 120px;
-  min-height: 84px;
+.contact-photo {
+  max-height: 100px;
+  width: auto;
   margin-right: 12px;
 }
 
