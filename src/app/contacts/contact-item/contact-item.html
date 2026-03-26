@@ -1,4 +1,8 @@
-<div class="contact-row clearfix">
+<a
+  class="contact-row clearfix"
+  [routerLink]="['/contacts', contact.id]"
+  routerLinkActive="active"
+>
   <span class="contact-name pull-left">{{ contact.name }}</span>
   <img
     *ngIf="
@@ -8,4 +12,4 @@
     src="{{ contact.imageUrl.trim() ? contact.imageUrl : contact.group?.[0]?.imageUrl }}"
     alt="{{ contact.name }}"
   />
-</div>
+</a>
