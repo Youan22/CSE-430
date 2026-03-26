@@ -8,7 +8,8 @@ import { MOCKDOCUMENTS } from './MOCKDOCUMENTS';
 })
 export class DocumentService {
   documents: Document[] = [];
-  documentSelectedEvent = new EventEmitter<Document>();
+
+  documentChangedEvent = new EventEmitter<Document[]>();
 
   constructor() {
     // Flatten the hierarchical MOCKDOCUMENTS tree so the UI can show
@@ -25,6 +26,18 @@ export class DocumentService {
       if (document.id === id) return document;
     }
     return null;
+  }
+
+  deleteDocument(document: Document): void {
+    if (!document) {
+      return;
+    }
+    const pos = this.documents.indexOf(document);
+    if (pos < 0) {
+      return;
+    }
+    this.documents.splice(pos, 1);
+    this.documentChangedEvent.emit(this.documents.slice());
   }
 
   private flattenDocuments(documents: any[]): Document[] {
