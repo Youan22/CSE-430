@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Subject } from 'rxjs';
 
 import { Document } from './document.model';
@@ -13,7 +14,12 @@ export class DocumentService {
 
   documentListChangedEvent = new Subject<Document[]>();
 
-  constructor() {
+  // TODO: Replace with your Firebase Realtime Database REST endpoint.
+  // Example: `https://<your-db>.firebaseio.com/documents.json?auth=<token>`
+  private documentsUrl =
+    'https://cms-app-project-88573-default-rtdb.firebaseio.com/documents.json?auth=YOUR_FIREBASE_AUTH_TOKEN';
+
+  constructor(protected http: HttpClient) {
     // Flatten the hierarchical MOCKDOCUMENTS tree so the UI can show
     // every document (parents + children) in a single list.
     this.documents = this.flattenDocuments(MOCKDOCUMENTS);
@@ -21,6 +27,32 @@ export class DocumentService {
   }
 
   getDocuments(): Document[] {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http
+      .get<Document[]>(this.documentsUrl, { headers })
+      .subscribe(
+        // success method
+        (documents: Document[]) => {
+          this.documents = documents;
+          this.maxDocumentId = this.getMaxId();
+
+          // Sort by name (ascending).
+          this.documents.sort((a: Document, b: Document) => {
+            if (a.name < b.name) return -1;
+            if (a.name > b.name) return 1;
+            return 0;
+          });
+
+          this.documentListChangedEvent.next(this.documents.slice());
+        },
+        // error method
+        (error: any) => {
+          // eslint-disable-next-line no-console
+          console.error(error);
+        },
+      );
+
     return this.documents.slice();
   }
 
@@ -44,6 +76,24 @@ export class DocumentService {
     return maxId;
   }
 
+  storeDocuments(): void {
+    // Sort so the list is stable in the UI and in the database.
+    this.documents.sort((a: Document, b: Document) => {
+      if (a.name < b.name) return -1;
+      if (a.name > b.name) return 1;
+      return 0;
+    });
+
+    const jsonDocuments = JSON.stringify(this.documents);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http
+      .put(this.documentsUrl, jsonDocuments, { headers })
+      .subscribe(() => {
+        this.documentListChangedEvent.next(this.documents.slice());
+      });
+  }
+
   addDocument(newDocument: Document): void {
     if (!newDocument) {
       return;
@@ -52,8 +102,7 @@ export class DocumentService {
     newDocument.id = String(this.maxDocumentId);
     this.documents.push(newDocument);
 
-    const documentsListClone = this.documents.slice();
-    this.documentListChangedEvent.next(documentsListClone);
+    this.storeDocuments();
   }
 
   updateDocument(originalDocument: Document, newDocument: Document): void {
@@ -67,8 +116,7 @@ export class DocumentService {
     newDocument.id = originalDocument.id;
     this.documents[pos] = newDocument;
 
-    const documentsListClone = this.documents.slice();
-    this.documentListChangedEvent.next(documentsListClone);
+    this.storeDocuments();
   }
 
   deleteDocument(document: Document): void {
@@ -81,8 +129,7 @@ export class DocumentService {
     }
     this.documents.splice(pos, 1);
 
-    const documentsListClone = this.documents.slice();
-    this.documentListChangedEvent.next(documentsListClone);
+    this.storeDocuments();
   }
 
   private flattenDocuments(documents: any[]): Document[] {
