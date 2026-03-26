@@ -3,8 +3,11 @@
     <h3 class="panel-title contact-name">{{ contact.name }}</h3>
     <div class="clearfix contact-heading-row">
       <img
+        *ngIf="
+          contact.imageUrl.trim() || contact.group?.[0]?.imageUrl?.trim()
+        "
         class="pull-left img-responsive contact-photo"
-        src="{{ contact.imageUrl }}"
+        src="{{ contact.imageUrl.trim() ? contact.imageUrl : contact.group?.[0]?.imageUrl }}"
         alt="{{ contact.name }}"
       />
       <div class="pull-right btn-group contact-actions" role="group">
