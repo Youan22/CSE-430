@@ -1,10 +1,11 @@
+import { NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 import { Contact } from '../contact.model';
 
 @Component({
   selector: 'cms-contact-item',
-  imports: [],
+  imports: [NgIf],
   templateUrl: './contact-item.html',
   styleUrl: './contact-item.css',
 })

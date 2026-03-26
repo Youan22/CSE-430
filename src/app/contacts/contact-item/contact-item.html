@@ -1,8 +1,11 @@
 <div class="contact-row clearfix">
   <span class="contact-name pull-left">{{ contact.name }}</span>
   <img
+    *ngIf="
+      contact.imageUrl.trim() || contact.group?.[0]?.imageUrl?.trim()
+    "
     class="contact-photo pull-right img-responsive"
-    src="{{ contact.imageUrl }}"
+    src="{{ contact.imageUrl.trim() ? contact.imageUrl : contact.group?.[0]?.imageUrl }}"
     alt="{{ contact.name }}"
   />
 </div>

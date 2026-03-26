@@ -10,8 +10,21 @@
 }
 
 .pad-left-right{
-  margin-left:1rem;
-  margin-right:1rem;
+  padding-left:1rem;
+  padding-right:1rem;
+}
+
+.row label {
+  display: inline-block;
+  width: 95px; /* keeps "Description:" and "URL:" aligned */
+  font-weight: bold;
+}
+
+.row .label-value {
+  display: inline-block;
+  width: calc(100% - 95px);
+  word-break: break-word; /* allow long URLs to wrap without shifting */
+  vertical-align: top;
 }
 
 .panel-heading a.btn + a.btn {
