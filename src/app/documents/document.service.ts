@@ -14,10 +14,7 @@ export class DocumentService {
 
   documentListChangedEvent = new Subject<Document[]>();
 
-  // TODO: Replace with your Firebase Realtime Database REST endpoint.
-  // Example: `https://<your-db>.firebaseio.com/documents.json?auth=<token>`
-  private documentsUrl =
-    'https://cms-app-project-88573-default-rtdb.firebaseio.com/documents.json?auth=YOUR_FIREBASE_AUTH_TOKEN';
+  private documentsUrl = 'http://localhost:3000/documents';
 
   constructor(protected http: HttpClient) {
     // Flatten the hierarchical MOCKDOCUMENTS tree so the UI can show
@@ -27,14 +24,12 @@ export class DocumentService {
   }
 
   getDocuments(): Document[] {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
     this.http
-      .get<Document[]>(this.documentsUrl, { headers })
+      .get<{ message: string; documents: Document[] }>(this.documentsUrl)
       .subscribe(
         // success method
-        (documents: Document[]) => {
-          this.documents = documents;
+        (responseData: { message: string; documents: Document[] }) => {
+          this.documents = responseData.documents ?? [];
           this.maxDocumentId = this.getMaxId();
 
           // Sort by name (ascending).
@@ -76,60 +71,61 @@ export class DocumentService {
     return maxId;
   }
 
-  storeDocuments(): void {
-    // Sort so the list is stable in the UI and in the database.
-    this.documents.sort((a: Document, b: Document) => {
-      if (a.name < b.name) return -1;
-      if (a.name > b.name) return 1;
-      return 0;
-    });
-
-    const jsonDocuments = JSON.stringify(this.documents);
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-    this.http
-      .put(this.documentsUrl, jsonDocuments, { headers })
-      .subscribe(() => {
-        this.documentListChangedEvent.next(this.documents.slice());
-      });
-  }
-
   addDocument(newDocument: Document): void {
     if (!newDocument) {
       return;
     }
-    this.maxDocumentId++;
-    newDocument.id = String(this.maxDocumentId);
-    this.documents.push(newDocument);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    newDocument.id = '';
 
-    this.storeDocuments();
+    this.http
+      .post<{ message: string; document: Document }>(this.documentsUrl, newDocument, {
+        headers,
+      })
+      .subscribe((responseData) => {
+        this.documents.push(responseData.document);
+        this.sortAndSend();
+      });
   }
 
   updateDocument(originalDocument: Document, newDocument: Document): void {
     if (!originalDocument || !newDocument) {
       return;
     }
-    const pos = this.documents.indexOf(originalDocument);
+    const pos = this.documents.findIndex((d) => d.id === originalDocument.id);
     if (pos < 0) {
       return;
     }
     newDocument.id = originalDocument.id;
-    this.documents[pos] = newDocument;
+    (newDocument as any)._id = (originalDocument as any)._id;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    this.storeDocuments();
+    this.http
+      .put(`${this.documentsUrl}/${originalDocument.id}`, newDocument, { headers })
+      .subscribe(() => {
+        this.documents[pos] = newDocument;
+        this.sortAndSend();
+      });
   }
 
   deleteDocument(document: Document): void {
     if (!document) {
       return;
     }
-    const pos = this.documents.indexOf(document);
+    const pos = this.documents.findIndex((d) => d.id === document.id);
     if (pos < 0) {
       return;
     }
-    this.documents.splice(pos, 1);
+    this.http.delete(`${this.documentsUrl}/${document.id}`).subscribe(() => {
+      this.documents.splice(pos, 1);
+      this.sortAndSend();
+    });
+  }
 
-    this.storeDocuments();
+  private sortAndSend(): void {
+    this.documents.sort((a: Document, b: Document) => a.name.localeCompare(b.name));
+    this.maxDocumentId = this.getMaxId();
+    this.documentListChangedEvent.next(this.documents.slice());
   }
 
   private flattenDocuments(documents: any[]): Document[] {

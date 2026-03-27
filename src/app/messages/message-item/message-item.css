@@ -1,15 +1,23 @@
 .messageHeader {
-  background-color: azure;
-  border: solid thin black;
-  border-radius: 10px;
-  padding: 0.4rem;
-  font-size: 1.5rem;
+  display: inline-block;
+  background-color: #eef7ff;
+  border: 1px solid #cfe6ff;
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2b4f72;
 }
 
 .messageText {
-  border-radius: 10px;
-  padding: 5px;
-  margin-top: 0.25rem;
-  margin-left: 1rem;
+  padding: 0.45rem 0 0 0.2rem;
+  margin-top: 0.2rem;
   font-size: 1.5rem;
+}
+
+.messageHeader.muted {
+  background-color: #f4f4f4;
+  border-color: #e0e0e0;
+  color: #666;
+  font-weight: 500;
 }
