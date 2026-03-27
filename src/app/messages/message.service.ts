@@ -12,10 +12,7 @@ export class MessageService {
   messageChangedEvent = new EventEmitter<Message[]>();
   maxMessageId = 0;
 
-  // Example:
-  // `https://<your-db>.firebaseio.com/messages.json?auth=<token>`
-  private messagesUrl =
-    'https://cms-app-project-88573-default-rtdb.firebaseio.com/messages.json?auth=YOUR_FIREBASE_AUTH_TOKEN';
+  private messagesUrl = 'http://localhost:3000/messages';
 
   constructor(protected http: HttpClient) {}
 
@@ -33,17 +30,12 @@ export class MessageService {
   }
 
   getMessages(): Message[] {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
     this.http
-      .get<Message[]>(this.messagesUrl, { headers })
+      .get<{ message: string; messages: Message[] }>(this.messagesUrl)
       .subscribe(
-        (messages: Message[]) => {
-          // Firebase could return null if there are no messages yet.
-          this.messages = messages ?? [];
-          this.maxMessageId = this.getMaxId();
-
-          this.messageChangedEvent.emit(this.messages.slice());
+        (responseData: { message: string; messages: Message[] }) => {
+          this.messages = responseData.messages ?? [];
+          this.sortAndSend();
         },
         (error: any) => {
           // eslint-disable-next-line no-console
@@ -61,27 +53,28 @@ export class MessageService {
     return null;
   }
 
-  storeMessages(): void {
-    const jsonMessages = JSON.stringify(this.messages);
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-    this.http
-      .put(this.messagesUrl, jsonMessages, { headers })
-      .subscribe(() => {
-        this.messageChangedEvent.emit(this.messages.slice());
-      });
-  }
-
   addMessage(message: Message): void {
     if (!message) {
       return;
     }
 
-    this.maxMessageId++;
-    message.id = String(this.maxMessageId);
-    this.messages.push(message);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    message.id = '';
 
-    this.storeMessages();
+    this.http
+      .post<{ message: string; messageObject: Message }>(this.messagesUrl, message, {
+        headers,
+      })
+      .subscribe((responseData) => {
+        this.messages.push(responseData.messageObject);
+        this.sortAndSend();
+      });
+  }
+
+  private sortAndSend(): void {
+    this.messages.sort((a: Message, b: Message) => a.subject.localeCompare(b.subject));
+    this.maxMessageId = this.getMaxId();
+    this.messageChangedEvent.emit(this.messages.slice());
   }
 }
 
