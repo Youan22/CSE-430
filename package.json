@@ -1,0 +1,18 @@
+{
+  "name": "safemeds-mean",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SafeMeds MEAN stack — Angular SPA + Express API + MongoDB",
+  "scripts": {
+    "mean:setup": "npm --prefix server run setup",
+    "mean:db": "docker compose up -d",
+    "mean:api": "npm --prefix server start",
+    "mean:client": "npm --prefix client start",
+    "angular": "npm --prefix client start",
+    "api": "npm --prefix server start",
+    "mean:dev": "concurrently -k -n api,angular -c blue,cyan \"npm run api\" \"npm run angular\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

@@ -1,0 +1,32 @@
+<div class="page">
+  <header class="header">
+    <h1>SafeMeds</h1>
+    <p class="tagline">Medication list</p>
+  </header>
+
+  @if (error) {
+    <p class="error" role="alert">{{ error }}</p>
+  }
+
+  @if (loading && medications.length === 0) {
+    <p>Loading…</p>
+  } @else {
+    <app-medication-list
+      [medications]="medications"
+      (add)="openCreate()"
+      (edit)="openEdit($event)"
+      (deleteId)="onDelete($event)"
+    />
+  }
+
+  @if (showForm) {
+    <div class="form-panel">
+      <app-medication-form
+        [mode]="formMode"
+        [medication]="editingMedication"
+        (cancel)="closeForm()"
+        (save)="onSave($event)"
+      />
+    </div>
+  }
+</div>

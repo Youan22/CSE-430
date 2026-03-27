@@ -1,0 +1,13 @@
+# Optional: local MongoDB for development. The course setup uses MongoDB Atlas instead
+# (see server/.env.example). Use this only if you want a database on localhost.
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - safemeds_mongo_data:/data/db
+
+volumes:
+  safemeds_mongo_data:

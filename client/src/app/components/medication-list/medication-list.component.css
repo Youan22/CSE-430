@@ -1,0 +1,61 @@
+.toolbar {
+  margin-bottom: 1rem;
+}
+
+.add {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  background: #007aff;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.empty {
+  color: #666;
+  margin: 1rem 0;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  background: #f8f8f8;
+  font-weight: 600;
+}
+
+.row-actions {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.link {
+  background: none;
+  border: none;
+  color: #007aff;
+  cursor: pointer;
+  font: inherit;
+  margin-left: 0.5rem;
+}
+
+.link.danger {
+  color: #c00;
+}
