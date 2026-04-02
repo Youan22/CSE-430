@@ -13,6 +13,7 @@
           <th>Dosage</th>
           <th>Frequency</th>
           <th>Start</th>
+          <th>End</th>
           <th></th>
         </tr>
       </thead>
@@ -23,6 +24,7 @@
             <td>{{ formatDosage(m.dosage) }}</td>
             <td>{{ m.frequency }}</td>
             <td>{{ m.startDate | slice:0:10 }}</td>
+            <td>{{ m.endDate ? (m.endDate | slice:0:10) : '—' }}</td>
             <td class="row-actions">
               <button type="button" class="link" (click)="edit.emit(m)">Edit</button>
               <button type="button" class="link danger" (click)="deleteId.emit(m.id)">

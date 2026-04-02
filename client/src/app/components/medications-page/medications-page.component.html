@@ -1,8 +1,20 @@
 <div class="page">
-  <header class="header">
-    <h1>SafeMeds</h1>
-    <p class="tagline">Medication list</p>
-  </header>
+  <section class="hero" aria-label="Welcome">
+    <div class="hero__image-wrap">
+      <img
+        class="hero__image"
+        src="/images/hero-doctor.png"
+        width="800"
+        height="400"
+        alt=""
+        decoding="async"
+      />
+    </div>
+    <div class="hero__content">
+      <h2 class="page-title">Your medications</h2>
+      <p class="page-lead">Add, edit, or remove entries to match what you’re taking.</p>
+    </div>
+  </section>
 
   @if (error) {
     <p class="error" role="alert">{{ error }}</p>

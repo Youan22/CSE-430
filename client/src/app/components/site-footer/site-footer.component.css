@@ -1,0 +1,43 @@
+.site-footer {
+  position: relative;
+  margin-top: auto;
+  min-height: 120px;
+  overflow: hidden;
+  color: #f5f5f5;
+}
+
+.site-footer__backdrop {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+      to top,
+      rgba(15, 15, 18, 0.92) 0%,
+      rgba(25, 25, 30, 0.82) 45%,
+      rgba(35, 35, 42, 0.55) 100%
+    ),
+    url('/images/footer-glassware.png');
+  background-size: cover;
+  background-position: center 40%;
+}
+
+.site-footer__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 1.25rem;
+}
+
+.site-footer__disclaimer {
+  margin: 0 0 0.75rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 52ch;
+}
+
+.site-footer__copy {
+  margin: 0;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.65);
+}
